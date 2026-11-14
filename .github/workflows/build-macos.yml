@@ -96,6 +96,7 @@ jobs:
             --hidden-import ui.pyside_app \
             --hidden-import ui.tk_fallback \
             --hidden-import ai.models.feats \
+            --exclude-module pkg_resources \
             --collect-all mediapipe \
             --collect-all onnxruntime \
             --copy-metadata mediapipe \

@@ -1,0 +1,14 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+build/
+dist/
+*.spec
+ISHARA-macOS-M2.zip
+artifacts/macos_build_verification.json
+artifacts/MACOS_BUILD_REPORT.md
+database/*.db-shm
+database/*.db-wal

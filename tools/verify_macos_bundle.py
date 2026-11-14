@@ -40,15 +40,29 @@ def main() -> int:
     runtime_report.parent.mkdir(parents=True, exist_ok=True)
     environment = dict(os.environ)
     environment["ISHARA_VERIFY_OUTPUT"] = str(runtime_report)
-    subprocess.run(
+    completed = subprocess.run(
         [str(executable), "--verify-runtime"],
-        check=True,
+        check=False,
         capture_output=True,
         text=True,
         env=environment,
         timeout=60,
     )
+    if completed.stdout:
+        print(completed.stdout)
+    if completed.stderr:
+        print(completed.stderr, file=sys.stderr)
+    if not runtime_report.is_file():
+        raise SystemExit(
+            "Bundled runtime produced no diagnostic report; "
+            f"exit={completed.returncode}"
+        )
     runtime = json.loads(runtime_report.read_text(encoding="utf-8"))
+    if completed.returncode != 0:
+        raise SystemExit(
+            "Bundled runtime verification failed:\n"
+            + json.dumps(runtime, ensure_ascii=False, indent=2)
+        )
     if not runtime.get("frozen"):
         raise SystemExit("The runtime verifier did not execute from a frozen bundle")
     if runtime.get("resources_missing"):
